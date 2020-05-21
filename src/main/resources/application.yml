@@ -1,0 +1,66 @@
+server:
+  port: 8081
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  http:
+     encoding:
+       force: true
+#     charset: utf-8
+#     enabled: true
+  datasource:
+      url: jdbc:mysql://127.0.0.1:3306/lss?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+      username: root
+      password: asdfasdf
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnTeturn: false
+      poolPreparedStatements: true
+#配置监控统计拦截的filters，去掉后监控界面sql无法统计，‘wall’用于防火墙
+      filters: stat,wall,log4j
+      maxPoolPreparedStatementPerConnectionSize: 20
+      useGlobalDataSourceStat: true
+      connectionProperiest: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+#RedisConfig这个类主要是为了获取redis的ip和端口等信息。这些信息可以写在配置文件中:
+  redis:
+      host: localhost
+      port: 6379
+      timeout: 3000
+#pagehelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+## 该配置节点为独立的节点，有很多同学容易将这个配置放在spring的节点下，导致配置无法被识别
+mybatis:
+  mapper-locations: classpath*:/*Mapper.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.cec.tv.model  # 注意：对应实体类的路径
+swagger:
+  #启动swagger
+  enabled: true
+  #界面title显示
+  title: Swagger接口文档插件
+  #界面描述
+  description: 这是X项目的接口文档
+  #要扫描的包
+  base-package: com.cec.tv
+  #版本信息
+  version: v1.0
+  #开发者信息
+  contact:
+    name: lxf
+    email: 1009281661@qq.com
+    url: http://www.redbrid.com
+

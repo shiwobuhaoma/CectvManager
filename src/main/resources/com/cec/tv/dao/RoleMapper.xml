@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cec.tv.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.cec.tv.model.Role" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="canModify" property="canmodify" jdbcType="BIT" />
+    <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="isDel" property="isdel" jdbcType="BIT" />
+    <result column="r_name" property="rName" jdbcType="VARCHAR" />
+    <result column="role_name" property="role_name" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, canModify, createDate, isDel, r_name, role_name,remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cec.tv.model.Role" >
+    insert into role (id, canModify, createDate, 
+      isDel, r_name, role_name,remark)
+    values (#{id,jdbcType=BIGINT}, #{canmodify,jdbcType=BIT}, #{createdate,jdbcType=TIMESTAMP}, 
+      #{isdel,jdbcType=BIT}, #{rName,jdbcType=VARCHAR}, #{role_name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cec.tv.model.Role" >
+    insert into role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="canmodify != null" >
+        canModify,
+      </if>
+      <if test="createdate != null" >
+        createDate,
+      </if>
+      <if test="isdel != null" >
+        isDel,
+      </if>
+      <if test="rName != null" >
+        r_name,
+      </if>
+      <if test="role_name != null" >
+        role_name,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="canmodify != null" >
+        #{canmodify,jdbcType=BIT},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdel != null" >
+        #{isdel,jdbcType=BIT},
+      </if>
+      <if test="rName != null" >
+        #{rName,jdbcType=VARCHAR},
+      </if>
+      <if test="role_name != null" >
+        #{role_name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cec.tv.model.Role" >
+    update role
+    <set >
+      <if test="canmodify != null" >
+        canModify = #{canmodify,jdbcType=BIT},
+      </if>
+      <if test="createdate != null" >
+        createDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdel != null" >
+        isDel = #{isdel,jdbcType=BIT},
+      </if>
+      <if test="rName != null" >
+        r_name = #{rName,jdbcType=VARCHAR},
+      </if>
+      <if test="role_name != null" >
+        role_name = #{role_name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cec.tv.model.Role" >
+    update role
+    set canModify = #{canmodify,jdbcType=BIT},
+      createDate = #{createdate,jdbcType=TIMESTAMP},
+      isDel = #{isdel,jdbcType=BIT},
+      r_name = #{rName,jdbcType=VARCHAR},
+      role_name = #{role_name,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="deleteRole" parameterType="com.cec.tv.model.Role" >
+    update role
+    set isDel = #{isdel,jdbcType=BIT}
+    where role_name = #{role_name,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryRolesByUserName" parameterType="java.lang.String" resultType="java.lang.String">
+    select role.role_name from user
+    inner join user_role on user_role.uid = user.id
+    inner join role on role.id = user_role.rid
+    where user.username = #{username,jdbcType=VARCHAR}
+  </select>
+  <select id="getRoleList" resultType="com.cec.tv.model.Role">
+    select * from role
+  </select>
+</mapper>

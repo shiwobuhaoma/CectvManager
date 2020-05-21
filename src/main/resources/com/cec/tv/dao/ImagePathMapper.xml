@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cec.tv.dao.ImagePathMapper" >
+  <resultMap id="BaseResultMap" type="com.cec.tv.model.ImagePath" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="imgpath" property="imgpath" jdbcType="VARCHAR" />
+    <result column="fullfacephotopath" property="fullfacephotopath" jdbcType="VARCHAR" />
+    <result column="sidefacephotopath" property="sidefacephotopath" jdbcType="VARCHAR" />
+    <result column="fullbodyphotopath" property="fullbodyphotopath" jdbcType="VARCHAR" />
+    <result column="videointroduction" property="videointroduction" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, imgpath, fullfacephotopath, sidefacephotopath, fullbodyphotopath, videointroduction
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from imagepath
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from imagepath
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cec.tv.model.ImagePath" >
+    insert into imagepath (id, imgpath, fullfacephotopath, 
+      sidefacephotopath, fullbodyphotopath, videointroduction
+      )
+    values (#{id,jdbcType=VARCHAR}, #{imgpath,jdbcType=VARCHAR}, #{fullfacephotopath,jdbcType=VARCHAR}, 
+      #{sidefacephotopath,jdbcType=VARCHAR}, #{fullbodyphotopath,jdbcType=VARCHAR}, #{videointroduction,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cec.tv.model.ImagePath" >
+    insert into imagepath
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="imgpath != null" >
+        imgpath,
+      </if>
+      <if test="fullfacephotopath != null" >
+        fullfacephotopath,
+      </if>
+      <if test="sidefacephotopath != null" >
+        sidefacephotopath,
+      </if>
+      <if test="fullbodyphotopath != null" >
+        fullbodyphotopath,
+      </if>
+      <if test="videointroduction != null" >
+        videointroduction,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="imgpath != null" >
+        #{imgpath,jdbcType=VARCHAR},
+      </if>
+      <if test="fullfacephotopath != null" >
+        #{fullfacephotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="sidefacephotopath != null" >
+        #{sidefacephotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="fullbodyphotopath != null" >
+        #{fullbodyphotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="videointroduction != null" >
+        #{videointroduction,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cec.tv.model.ImagePath" >
+    update imagepath
+    <set >
+      <if test="imgpath != null" >
+        imgpath = #{imgpath,jdbcType=VARCHAR},
+      </if>
+      <if test="fullfacephotopath != null" >
+        fullfacephotopath = #{fullfacephotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="sidefacephotopath != null" >
+        sidefacephotopath = #{sidefacephotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="fullbodyphotopath != null" >
+        fullbodyphotopath = #{fullbodyphotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="videointroduction != null" >
+        videointroduction = #{videointroduction,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cec.tv.model.ImagePath" >
+    update imagepath
+    set imgpath = #{imgpath,jdbcType=VARCHAR},
+      fullfacephotopath = #{fullfacephotopath,jdbcType=VARCHAR},
+      sidefacephotopath = #{sidefacephotopath,jdbcType=VARCHAR},
+      fullbodyphotopath = #{fullbodyphotopath,jdbcType=VARCHAR},
+      videointroduction = #{videointroduction,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
