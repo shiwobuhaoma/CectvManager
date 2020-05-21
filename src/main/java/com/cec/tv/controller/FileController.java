@@ -18,7 +18,8 @@ import java.util.List;
 
 
 @Api(tags = "上传图片或者视频相关接口")
-@RequestMapping(value = "/file")
+@RequestMapping(value = "/file/")
+@RestController
 public class FileController {
 
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
@@ -28,7 +29,7 @@ public class FileController {
 
     @ApiOperation(value = "单文件上传接口",httpMethod="POST")
     @ResponseBody
-    @RequestMapping(value = "/upload")
+    @RequestMapping(value = "upload")
     public ResponseMessage<String> upload(@RequestParam String type ,@RequestParam String id ,@RequestParam("file") MultipartFile file) {
         ResponseMessage<String> result = new ResponseMessage<>();
         // 设置文件存储路径
@@ -40,22 +41,27 @@ public class FileController {
 
             //一寸照片
             if ("imgpath".equals(type)){
+                if (biggerThanOneM(file)) return result.setFailure("照片大于1M");
                 filePath.append("/imgpath");
             }
             //如果是正面照
             if ("fullfacephotopath".equals(type)){
+                if (biggerThanOneM(file)) return result.setFailure("照片大于1M");
                 filePath.append("/fullfacephotopath");
             }
             //如果是侧面照
             if ("sidefacephotopath".equals(type)){
+                if (biggerThanOneM(file)) return result.setFailure("照片大于1M");
                 filePath.append("/sidefacephotopath");
             }
             //如果是全身照
             if ("fullbodyphotopath".equals(type)){
+                if (biggerThanOneM(file)) return result.setFailure("照片大于1M");
                 filePath.append("/fullbodyphotopath");
             }
             //如果是个人介绍视频
             if ("videointroduction".equals(type)){
+                if (file.getSize()>1024*1024*100) return result.setSuccess("视频文件大于100M");
                 filePath.append("/videointroduction");
             }
 
@@ -92,9 +98,16 @@ public class FileController {
         return result.setFailure("上传失败");
     }
 
+    private boolean biggerThanOneM(@RequestParam("file") MultipartFile file) {
+        if (isBigThanOneM(file)){
+            return true;
+        }
+        return false;
+    }
+
     @ApiOperation(value = "批量文件上传接口",httpMethod="POST")
     @ResponseBody
-    @RequestMapping("/batch")
+    @RequestMapping("batch")
     public ResponseMessage<String> handleFileUpload(HttpServletRequest request) {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         MultipartFile file = null;
@@ -125,7 +138,7 @@ public class FileController {
 
     @ApiOperation(value = "文件下载接口",httpMethod="GET")
     @ResponseBody
-    @RequestMapping("/download")
+    @RequestMapping("download")
     public ResponseMessage<String> downloadFile(HttpServletRequest request, HttpServletResponse response) {
         String fileName = "dalaoyang.jpeg";// 文件名
         ResponseMessage<String> result = new ResponseMessage<>();
@@ -170,5 +183,14 @@ public class FileController {
             }
         }
         return result.setFailure("下载失败");
+    }
+
+
+    private boolean isBigThanOneM(MultipartFile file){
+        if (file.getSize() > 1024*1024){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
