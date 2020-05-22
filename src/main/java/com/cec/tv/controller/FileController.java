@@ -4,6 +4,7 @@ import com.cec.tv.result.ResponseMessage;
 import com.cec.tv.service.ImagePathService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,10 @@ public class FileController {
     @ApiOperation(value = "单文件上传接口",httpMethod="POST")
     @ResponseBody
     @RequestMapping(value = "upload")
-    public ResponseMessage<String> upload(@RequestParam String type ,@RequestParam String id ,@RequestParam("file") MultipartFile file) {
+    public ResponseMessage<String> upload(
+            @ApiParam(name="type",value="上传图片的类型【（imgpath：1寸照片，fullfacephotopath：正面照，sidefacephotopath：侧面照，fullbodyphotopath：全身照，videointroduction：视频介绍）】",required=true)@RequestParam String type ,
+            @ApiParam(name="id",value="身份证号",required=true) @RequestParam String id ,
+            @ApiParam(name="file",value="文件",required=true) @RequestParam("file") MultipartFile file) {
         ResponseMessage<String> result = new ResponseMessage<>();
         // 设置文件存储路径
         StringBuilder filePath = new StringBuilder("/picture");

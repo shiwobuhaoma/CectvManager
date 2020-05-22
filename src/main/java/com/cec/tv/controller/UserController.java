@@ -65,7 +65,7 @@ public class UserController {
 
     @ApiOperation(value = "退出登录接口",httpMethod="POST")
     @ResponseBody
-    @RequiresAuthentication
+//    @RequiresAuthentication
     @RequestMapping(value = "logout", method = {RequestMethod.POST})
     public ResponseMessage<String> logout(@RequestParam String userId) {
         User user = new User();

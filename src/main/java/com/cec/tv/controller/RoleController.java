@@ -26,7 +26,7 @@ public class RoleController {
     RoleService roleService;
     @ApiOperation(value = "获取角色列表接口",httpMethod="POST")
     @ResponseBody
-    @RequiresAuthentication
+//    @RequiresAuthentication
 //    @RequiresRoles(value = {"admin","publisher"}, logical = Logical.OR)
     @RequestMapping("getRoleList")
     public ResponseMessage<Set<Role>> getRoleList() {
@@ -46,7 +46,7 @@ public class RoleController {
     @Transactional
     @ResponseBody
 //    @RequiresPermissions("admin:all")
-    @RequiresRoles("admin")
+//    @RequiresRoles("admin")
     @RequestMapping("addRole")
     public ResponseMessage<String> addRole(@RequestBody Role role) {
         ResponseMessage<String> responseMessage = new ResponseMessage<>();

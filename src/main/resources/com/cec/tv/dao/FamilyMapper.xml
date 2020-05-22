@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cec.tv.dao.FamilyMapper" >
+  <resultMap id="BaseResultMap" type="com.cec.tv.model.Family" >
+    <result column="fathername" property="fathername" jdbcType="VARCHAR" />
+    <result column="mathername" property="mathername" jdbcType="VARCHAR" />
+    <result column="brothername" property="brothername" jdbcType="VARCHAR" />
+    <result column="sisthername" property="sisthername" jdbcType="VARCHAR" />
+    <result column="fatherjob" property="fatherjob" jdbcType="VARCHAR" />
+    <result column="matherjob" property="matherjob" jdbcType="VARCHAR" />
+    <result column="fatherpost" property="fatherpost" jdbcType="VARCHAR" />
+    <result column="motherpost" property="motherpost" jdbcType="VARCHAR" />
+    <result column="fatherphone" property="fatherphone" jdbcType="VARCHAR" />
+    <result column="motherphone" property="motherphone" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.cec.tv.model.Family" >
+    insert into family (fathername, mathername, brothername, 
+      sisthername, fatherjob, matherjob, 
+      fatherpost, motherpost, fatherphone, 
+      motherphone, id)
+    values (#{fathername,jdbcType=VARCHAR}, #{mathername,jdbcType=VARCHAR}, #{brothername,jdbcType=VARCHAR}, 
+      #{sisthername,jdbcType=VARCHAR}, #{fatherjob,jdbcType=VARCHAR}, #{matherjob,jdbcType=VARCHAR}, 
+      #{fatherpost,jdbcType=VARCHAR}, #{motherpost,jdbcType=VARCHAR}, #{fatherphone,jdbcType=VARCHAR}, 
+      #{motherphone,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cec.tv.model.Family" >
+    insert into family
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fathername != null" >
+        fathername,
+      </if>
+      <if test="mathername != null" >
+        mathername,
+      </if>
+      <if test="brothername != null" >
+        brothername,
+      </if>
+      <if test="sisthername != null" >
+        sisthername,
+      </if>
+      <if test="fatherjob != null" >
+        fatherjob,
+      </if>
+      <if test="matherjob != null" >
+        matherjob,
+      </if>
+      <if test="fatherpost != null" >
+        fatherpost,
+      </if>
+      <if test="motherpost != null" >
+        motherpost,
+      </if>
+      <if test="fatherphone != null" >
+        fatherphone,
+      </if>
+      <if test="motherphone != null" >
+        motherphone,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fathername != null" >
+        #{fathername,jdbcType=VARCHAR},
+      </if>
+      <if test="mathername != null" >
+        #{mathername,jdbcType=VARCHAR},
+      </if>
+      <if test="brothername != null" >
+        #{brothername,jdbcType=VARCHAR},
+      </if>
+      <if test="sisthername != null" >
+        #{sisthername,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherjob != null" >
+        #{fatherjob,jdbcType=VARCHAR},
+      </if>
+      <if test="matherjob != null" >
+        #{matherjob,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherpost != null" >
+        #{fatherpost,jdbcType=VARCHAR},
+      </if>
+      <if test="motherpost != null" >
+        #{motherpost,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherphone != null" >
+        #{fatherphone,jdbcType=VARCHAR},
+      </if>
+      <if test="motherphone != null" >
+        #{motherphone,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

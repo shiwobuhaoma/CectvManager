@@ -2,6 +2,7 @@ package com.cec.tv.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +16,13 @@ public class ImagePath {
     private String id;
 
     private String imgpath;
-
+    @ApiModelProperty(value="正面照路径",required = true)
     private String fullfacephotopath;
-
+    @ApiModelProperty(value="侧身照路径",required = true)
     private String sidefacephotopath;
-
+    @ApiModelProperty(value="全身照路径",required = true)
     private String fullbodyphotopath;
-
+    @ApiModelProperty(value="1分钟视频路径",required = true)
     private String videointroduction;
 
 
