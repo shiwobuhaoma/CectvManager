@@ -1,16 +1,24 @@
 package com.cec.tv.controller;
 
+import java.util.UUID;
+
 import com.cec.tv.result.ResponseMessage;
 import com.cec.tv.service.ImagePathService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.RequestContext;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,88 +36,70 @@ public class FileController {
     @Autowired
     ImagePathService mImagePathService;
 
-    @ApiOperation(value = "单文件上传接口",httpMethod="POST")
+    @ApiOperation(value = "单文件上传接口", httpMethod = "POST")
     @ResponseBody
     @RequestMapping(value = "upload")
     public ResponseMessage<String> upload(
-            @ApiParam(name="type",value="上传图片的类型【（imgpath：1寸照片，fullfacephotopath：正面照，sidefacephotopath：侧面照，fullbodyphotopath：全身照，videointroduction：视频介绍）】",required=true)@RequestParam String type ,
-            @ApiParam(name="id",value="身份证号",required=true) @RequestParam String id ,
-            @ApiParam(name="file",value="文件",required=true) @RequestParam("file") MultipartFile file) {
+            @ApiParam(name = "type", value = "上传图片的类型【（imgpath：1寸照片，fullfacephotopath：正面照，sidefacephotopath：侧面照，fullbodyphotopath：全身照，videointroduction：视频介绍）】", required = true) @RequestParam String type,
+            @ApiParam(name = "id", value = "身份证号", required = true) @RequestParam String id,
+            @ApiParam(name = "file", value = "文件", required = true) @RequestParam("file") MultipartFile[] file
+    ) throws Exception {
         ResponseMessage<String> result = new ResponseMessage<>();
         // 设置文件存储路径
         StringBuilder filePath = new StringBuilder("/picture");
         try {
-            if (file.isEmpty()) {
-                return result.setFailure("文件为空");
-            }
+            int j = 0;
 
-            //一寸照片
-            if ("imgpath".equals(type)){
-                if (biggerThanOneM(file)) return result.setFailure("照片大于1M");
-                filePath.append("/imgpath");
-            }
-            //如果是正面照
-            if ("fullfacephotopath".equals(type)){
-                if (biggerThanOneM(file)) return result.setFailure("照片大于1M");
-                filePath.append("/fullfacephotopath");
-            }
-            //如果是侧面照
-            if ("sidefacephotopath".equals(type)){
-                if (biggerThanOneM(file)) return result.setFailure("照片大于1M");
-                filePath.append("/sidefacephotopath");
-            }
-            //如果是全身照
-            if ("fullbodyphotopath".equals(type)){
-                if (biggerThanOneM(file)) return result.setFailure("照片大于1M");
-                filePath.append("/fullbodyphotopath");
-            }
-            //如果是个人介绍视频
-            if ("videointroduction".equals(type)){
-                if (file.getSize()>1024*1024*100) return result.setSuccess("视频文件大于100M");
-                filePath.append("/videointroduction");
-            }
+            for (int i = 0; i < file.length; i++) {
+                // 获取文件名
+                String fileName = file[i].getOriginalFilename();
+                log.info("上传的文件名为：" + fileName);
+                // 获取文件的后缀名
+                String suffixName = fileName.substring(fileName.lastIndexOf("."));
+                ;
+                log.info("文件的后缀名为：" + suffixName);
+                File dirFile = new File(filePath.toString());
+                if (!dirFile.exists()) {
+                    dirFile.mkdirs();
+                }
+                String path = filePath.append(System.currentTimeMillis()).append(suffixName).toString();
+                File dest = new File(path);
+                // 检测是否存在目录
+                if (!dest.getParentFile().exists()) {
+                    dest.getParentFile().mkdirs();// 新建文件夹
+                }
+                file[i].transferTo(dest);// 文件写入
+                int i1 = mImagePathService.insertPath(filePath.toString(), id, type);
+                if (i1 > 0) {
+                    j++;
+                } else {
+                    result.setMessage("上传第" + i + "个文件时失败");
+                    return result;
+                }
 
-
-            // 获取文件名
-            String fileName = file.getOriginalFilename();
-            log.info("上传的文件名为：" + fileName);
-            // 获取文件的后缀名
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            log.info("文件的后缀名为：" + suffixName);
-            File dirFile = new File(filePath.toString());
-            if (!dirFile.exists()){
-                dirFile.mkdirs();
             }
-            String path = filePath.append(fileName).toString();
-            File dest = new File(path);
-            // 检测是否存在目录
-            if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();// 新建文件夹
-            }
-            file.transferTo(dest);// 文件写入
-            int i = mImagePathService.insertPath(filePath.toString(),id,type);
-            if (i>0){
+            if (j == file.length) {
                 return result.setSuccess("上传成功");
-            }else{
+            } else {
                 return result.setFailure("数据库写入文件路径失败");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
 
         }
         return result.setFailure("上传失败");
     }
 
     private boolean biggerThanOneM(@RequestParam("file") MultipartFile file) {
-        if (isBigThanOneM(file)){
+        if (isBigThanOneM(file)) {
             return true;
         }
         return false;
     }
 
-    @ApiOperation(value = "批量文件上传接口",httpMethod="POST")
+    @ApiOperation(value = "批量文件上传接口", httpMethod = "POST")
     @ResponseBody
     @RequestMapping("batch")
     public ResponseMessage<String> handleFileUpload(HttpServletRequest request) {
@@ -129,7 +119,7 @@ public class FileController {
                     stream.close();
                 } catch (Exception e) {
                     stream = null;
-                    return result.setFailure( "第 " + i + " 个文件上传失败 ==> "
+                    return result.setFailure("第 " + i + " 个文件上传失败 ==> "
                             + e.getMessage());
                 }
             } else {
@@ -140,7 +130,29 @@ public class FileController {
         return result.setSuccess("上传成功");
     }
 
-    @ApiOperation(value = "文件下载接口",httpMethod="GET")
+    @ApiOperation(value = "批量文件上传接口", httpMethod = "POST")
+    @ResponseBody
+    @RequestMapping("batch2")
+    public ResponseMessage<String> handleFileUpload(
+            @ApiParam(name = "fullfacephotopath", value = "正面半身照", required = true) @RequestParam("fullfacephotopath") MultipartFile file1,
+            @ApiParam(name = "fullfacephotopath", value = "侧面半身照", required = true) @RequestParam("sidefacephotopath") MultipartFile file2,
+            @ApiParam(name = "fullfacephotopath", value = "正面全身照", required = true) @RequestParam("fullbodyphotopath") MultipartFile file3,
+            @ApiParam(name = "fullfacephotopath", value = "1分钟视频", required = true) @RequestParam("videointroduction") MultipartFile file4,
+            @ApiParam(name = "otherFile", value = "其它文件") @RequestParam("otherFile") MultipartFile file5
+
+    ) {
+        ResponseMessage<String> result = new ResponseMessage<>();
+        String originalFilename1 = file1.getOriginalFilename();
+        try {
+            InputStream inputStream1 = file1.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result.setSuccess("OK");
+    }
+
+    @ApiOperation(value = "文件下载接口", httpMethod = "GET")
     @ResponseBody
     @RequestMapping("download")
     public ResponseMessage<String> downloadFile(HttpServletRequest request, HttpServletResponse response) {
@@ -190,10 +202,10 @@ public class FileController {
     }
 
 
-    private boolean isBigThanOneM(MultipartFile file){
-        if (file.getSize() > 1024*1024){
+    private boolean isBigThanOneM(MultipartFile file) {
+        if (file.getSize() > 1024 * 1024) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

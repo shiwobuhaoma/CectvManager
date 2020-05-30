@@ -1,25 +1,22 @@
 package com.cec.tv.controller;
 
 
-import com.cec.tv.config.Constant;
+import com.cec.tv.dao.ManageMapper;
+import com.cec.tv.model.Manage;
 import com.cec.tv.model.User;
 import com.cec.tv.result.ResponseMessage;
 import com.cec.tv.result.ResultEnum;
+import com.cec.tv.service.ManagerService;
 import com.cec.tv.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Date;
+
 @Api(tags = "用户相关接口", description = "提供用户相关的API")
 @RequestMapping("/user/")
 @RestController
@@ -28,42 +25,108 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "用户登录接口",httpMethod="POST")
+    @Autowired
+    private ManagerService managerService;
+
+    @ApiOperation(value = "用户登录接口", httpMethod = "POST")
     @Transactional
     @ResponseBody
     @RequestMapping(value = "login", method = {RequestMethod.POST})
     public ResponseMessage<String> userLogin(@RequestBody User user) {
         ResponseMessage<String> result = new ResponseMessage<>();
-        if (user != null){
+        if (user != null) {
             String userName = user.getUsername();
             String passWord = user.getUserpwd();
             //1.获取Subject
-            Subject subject = SecurityUtils.getSubject();
-            //2.封装用户数据
-            UsernamePasswordToken token = new UsernamePasswordToken(userName,passWord);
-            try {
-                //3.执行登录方法
-                subject.login(token);
-                result.setResultEnum(ResultEnum.SUCCESS);
-                result.setToken(subject.getSession().getId().toString());
-            } catch (UnknownAccountException e) {
-                //e.printStackTrace();
-                //登录失败:用户名不存在
-                result.setResultEnum(ResultEnum.UNKNOWN_ERROR);
-            }catch (IncorrectCredentialsException e) {
-                //e.printStackTrace();
-                //登录失败:密码错误
-                result.setResultEnum(ResultEnum.PASSWORD_ERROR);
-            }
-        }else{
+//            Subject subject = SecurityUtils.getSubject();
+//            //2.封装用户数据
+//            UsernamePasswordToken token = new UsernamePasswordToken(userName,passWord);
+//            try {
+//                //3.执行登录方法
+//                subject.login(token);
+//                result.setResultEnum(ResultEnum.SUCCESS);
+//                result.setToken(subject.getSession().getId().toString());
+//            } catch (UnknownAccountException e) {
+//                //e.printStackTrace();
+//                //登录失败:用户名不存在
+//                result.setResultEnum(ResultEnum.UNKNOWN_ERROR);
+//            }catch (IncorrectCredentialsException e) {
+//                //e.printStackTrace();
+//                //登录失败:密码错误
+//                result.setResultEnum(ResultEnum.PASSWORD_ERROR);
+//            }
+        } else {
             result.setResultEnum(ResultEnum.EMPTY_USERNAME_OR_PASSWORD);
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "空乘人才报名项目管理员、机构登录接口", httpMethod = "POST")
+    @Transactional
+    @ResponseBody
+    @RequestMapping(value = "manageOrOrganLogin", method = {RequestMethod.POST})
+    public ResponseMessage<String> manageOrOrganLogin(@RequestBody Manage manage) {
+        ResponseMessage<String> result = new ResponseMessage<>();
+        if (manage != null) {
+            String manageName = manage.getName();
+            if (manageName == null || "".equals(manageName)) {
+                result.setFailure("用户名为空");
+                return result;
+            }
+            String managePassWord = manage.getPassword();
+            if (managePassWord == null || "".equals(managePassWord)) {
+                result.setFailure("密码为空");
+                return result;
+            }
+            Manage manager = managerService.login(manageName);
+            if (manager != null) {
+                String password = manager.getPassword();
+                if (managePassWord.equals(password)) {
+                    manager.setIslogin("1");
+                    int i = managerService.updateLoginState(manager);
+                    if (i > 0) {
+                        result.setSuccess("登录成功");
+                    } else {
+                        result.setFailure("登录写入数据库错误");
+                    }
+                } else {
+                    result.setFailure("密码错误");
+                }
+            } else {
+                result.setFailure("账户不存在");
+            }
+
+        } else {
+            result.setFailure("参数为空");
         }
         return result;
     }
 
 
 
-    @ApiOperation(value = "退出登录接口",httpMethod="POST")
+    @ApiOperation(value = "空乘人才报名项目管理员、机构退出接口", httpMethod = "POST")
+    @Transactional
+    @ResponseBody
+    @RequestMapping(value = "manageOrOrganLogout", method = {RequestMethod.POST})
+    public ResponseMessage<String> manageOrOrganLogout(@RequestBody String managerId) {
+        ResponseMessage<String> result = new ResponseMessage<>();
+        if (managerId == null || "".equals(managerId)) {
+            result.setFailure("id为空");
+        }else{
+            Manage manager = new Manage();
+            manager.setId(managerId);
+            manager.setIslogin("0");
+            int i = managerService.updateLoginState(manager);
+            if (i > 0) {
+                result.setSuccess("退出成功");
+            } else {
+                result.setFailure("退出登录，写入数据库错误");
+            }
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "退出登录接口", httpMethod = "POST")
     @ResponseBody
 //    @RequiresAuthentication
     @RequestMapping(value = "logout", method = {RequestMethod.POST})
@@ -80,17 +143,16 @@ public class UserController {
         return result;
     }
 
-    @ApiOperation(value = "忘记密码",httpMethod="POST")
+    @ApiOperation(value = "忘记密码", httpMethod = "POST")
     @ResponseBody
     @RequestMapping("forgetPwd")
-    public ResponseMessage<String> ForgetPwd(){
+    public ResponseMessage<String> ForgetPwd() {
 
         return null;
     }
 
     /**
      * 未登录，shiro应重定向到登录界面，此处返回未登录状态信息由前端控制跳转页面
-     *
      */
     @ApiIgnore
     @ApiOperation("未登录")
@@ -112,7 +174,7 @@ public class UserController {
         return result;
     }
 
-    @ApiOperation(value = "注册接口",httpMethod="POST")
+    @ApiOperation(value = "注册接口", httpMethod = "POST")
     @Transactional
     @ResponseBody
     @RequestMapping("register")
@@ -125,10 +187,10 @@ public class UserController {
             int su = userService.register(user);
             if (su > 0) {
                 result.setResultEnum(ResultEnum.SUCCESS);
-            }else{
+            } else {
                 result.setResultEnum(ResultEnum.REPEAT_REGISTER);
             }
-        }else{
+        } else {
             result.setResultEnum(ResultEnum.EMPTY_PARAMETER);
         }
         return result;

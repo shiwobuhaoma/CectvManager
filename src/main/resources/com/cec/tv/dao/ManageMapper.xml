@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cec.tv.dao.ManageMapper" >
+  <resultMap id="BaseResultMap" type="com.cec.tv.model.Manage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="permissionId" property="permissionid" jdbcType="VARCHAR" />
+    <result column="roleId" property="roleid" jdbcType="VARCHAR" />
+    <result column="islogin" property="islogin" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, password, permissionId, roleId,islogin
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from air_manage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="query" resultType="com.cec.tv.model.Manage"  parameterType="java.lang.String">
+    select name from air_manage where name = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from air_manage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cec.tv.model.Manage" >
+    insert into air_manage (id, name, password, 
+      permissionId, roleId,islogin)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{permissionid,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}, #{islogin,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cec.tv.model.Manage" >
+    insert into air_manage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="permissionid != null" >
+        permissionId,
+      </if>
+      <if test="roleid != null" >
+        roleId,
+      </if>
+      <if test="islogin != null" >
+        islogin,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionid != null" >
+        #{permissionid,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="islogin != null" >
+        #{islogin,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cec.tv.model.Manage" >
+    update air_manage
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionid != null" >
+        permissionId = #{permissionid,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        roleId = #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="islogin != null" >
+        islogin = #{islogin,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateLoginState" parameterType="com.cec.tv.model.Manage" >
+    update air_manage
+    <set >
+      <if test="islogin != null" >
+        islogin = #{islogin,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <update id="updateByPrimaryKey" parameterType="com.cec.tv.model.Manage" >
+    update air_manage
+    set name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      permissionId = #{permissionid,jdbcType=VARCHAR},
+      roleId = #{roleid,jdbcType=VARCHAR},
+      islogin = #{islogin,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

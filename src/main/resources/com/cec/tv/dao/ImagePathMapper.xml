@@ -23,11 +23,9 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.cec.tv.model.ImagePath" >
-    insert into imagepath (id, imgpath, fullfacephotopath, 
-      sidefacephotopath, fullbodyphotopath, videointroduction
+    insert into imagepath (id, imgpath
       )
-    values (#{id,jdbcType=VARCHAR}, #{imgpath,jdbcType=VARCHAR}, #{fullfacephotopath,jdbcType=VARCHAR}, 
-      #{sidefacephotopath,jdbcType=VARCHAR}, #{fullbodyphotopath,jdbcType=VARCHAR}, #{videointroduction,jdbcType=VARCHAR}
+    values (#{id,jdbcType=VARCHAR}, #{imgpath,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.cec.tv.model.ImagePath" >

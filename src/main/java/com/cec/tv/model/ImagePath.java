@@ -49,4 +49,8 @@ public class ImagePath {
             imgpath = filePath;
         }
     }
+
+    public ImagePath(String filePath) {
+        this.imgpath = filePath;
+    }
 }

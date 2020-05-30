@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cec.tv.dao.StudentsMapper" >
+  <resultMap id="BaseResultMap" type="com.cec.tv.model.Students" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="height" property="height" jdbcType="INTEGER" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="isorgansignin" property="isorgansignin" jdbcType="VARCHAR" />
+    <result column="organid" property="organid" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" javaType="java.util.Date" jdbcType="DATE" />
+    <result column="imgpath" property="imgpath" jdbcType="VARCHAR" />
+    <result column="fullfacephotopath" property="fullfacephotopath" jdbcType="VARCHAR" />
+    <result column="sidefacephotopath" property="sidefacephotopath" jdbcType="VARCHAR" />
+    <result column="fullbodyphotopath" property="fullbodyphotopath" jdbcType="VARCHAR" />
+    <result column="videointroduction" property="videointroduction" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, sex, age, height, mobile, isorgansignin,organid,createtime,imgpath,
+    fullfacephotopath, sidefacephotopath, fullbodyphotopath, videointroduction
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from students
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByOrganId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from students
+    where organid = #{organid,jdbcType=VARCHAR}
+  </select>
+  <select id="queryStudentsOrderByEndTime" resultMap="BaseResultMap" parameterType="java.util.Date" >
+    select
+    <include refid="Base_Column_List" />
+    from students
+    where organid = #{organid,jdbcType=VARCHAR} and (createtime=#{createtime,jdbcType=DATE})
+    order by createtime
+  </select>
+  <select id="queryStudentsOrderByStartTime" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from students
+    where organid = #{organid,jdbcType=VARCHAR} and (now() &gt;=  #{createtime,jdbcType=DATE})
+    order by createtime
+  </select>
+  <select id="queryStudentsOrderByEndTime" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from students
+    where organid = #{organid,jdbcType=VARCHAR} and (createtime &gt;=  #{createtime,jdbcType=DATE})
+    order by createtime desc
+  </select>
+  <select id="queryStudentsOrderByStartAndEndTime" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from students
+    where organid = #{organid,jdbcType=VARCHAR} and (createtime between #{starttime,jdbcType=DATE} and #{endtime,jdbcType=DATE})
+    order by createtime
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from students
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cec.tv.model.Students" >
+    insert into students (id, name, sex,
+      age, height,mobile,  fullfacephotopath, isorgansignin,organid,createtime,imgpath,
+      sidefacephotopath, fullbodyphotopath, videointroduction
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, 
+      #{age,jdbcType=INTEGER}, #{height,jdbcType=INTEGER},
+     #{mobile,jdbcType=VARCHAR},  #{isorgansignin,jdbcType=VARCHAR},  #{organid,jdbcType=VARCHAR},
+     #{createtime,jdbcType=DATE}, #{imgpath,jdbcType=VARCHAR},#{fullfacephotopath,jdbcType=VARCHAR},
+      #{sidefacephotopath,jdbcType=VARCHAR}, #{fullbodyphotopath,jdbcType=VARCHAR}, #{videointroduction,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cec.tv.model.Students" >
+    insert into students
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="height != null" >
+        height,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="organid != null" >
+        organid,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="imgpath != null" >
+        imgpath,
+      </if>
+      <if test="isorgansignin != null" >
+        isorgansignin,
+      </if>
+      <if test="fullfacephotopath != null" >
+        fullfacephotopath,
+      </if>
+      <if test="sidefacephotopath != null" >
+        sidefacephotopath,
+      </if>
+      <if test="fullbodyphotopath != null" >
+        fullbodyphotopath,
+      </if>
+      <if test="videointroduction != null" >
+        videointroduction,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="height != null" >
+        #{height,jdbcType=INTEGER},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="organid != null" >
+        #{organid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=DATE},
+      </if>
+      <if test="imgpath != null" >
+        #{imgpath,jdbcType=VARCHAR},
+      </if>
+      <if test="isorgansignin != null" >
+        #{isorgansignin,jdbcType=VARCHAR},
+      </if>
+      <if test="fullfacephotopath != null" >
+        #{fullfacephotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="sidefacephotopath != null" >
+        #{sidefacephotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="fullbodyphotopath != null" >
+        #{fullbodyphotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="videointroduction != null" >
+        #{videointroduction,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cec.tv.model.Students" >
+    update students
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="height != null" >
+        height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="organid != null" >
+        organid = #{organid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=DATE},
+      </if>
+      <if test="imgpath != null" >
+        imgpath = #{imgpath,jdbcType=VARCHAR},
+      </if>
+      <if test="isorgansignin != null" >
+        isorgansignin = #{isorgansignin,jdbcType=VARCHAR},
+      </if>
+      <if test="fullfacephotopath != null" >
+        fullfacephotopath = #{fullfacephotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="sidefacephotopath != null" >
+        sidefacephotopath = #{sidefacephotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="fullbodyphotopath != null" >
+        fullbodyphotopath = #{fullbodyphotopath,jdbcType=VARCHAR},
+      </if>
+      <if test="videointroduction != null" >
+        videointroduction = #{videointroduction,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cec.tv.model.Students" >
+    update students
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      age = #{age,jdbcType=INTEGER},
+      height = #{height,jdbcType=INTEGER},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      organid = #{organid,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=DATE},
+      imgpath = #{imgpath,jdbcType=VARCHAR},
+      isorgansignin = #{isorgansignin,jdbcType=VARCHAR},
+      levelofeducation = #{levelofeducation,jdbcType=VARCHAR},
+      fullfacephotopath = #{fullfacephotopath,jdbcType=VARCHAR},
+      sidefacephotopath = #{sidefacephotopath,jdbcType=VARCHAR},
+      fullbodyphotopath = #{fullbodyphotopath,jdbcType=VARCHAR},
+      videointroduction = #{videointroduction,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

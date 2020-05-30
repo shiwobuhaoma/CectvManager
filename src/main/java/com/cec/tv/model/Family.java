@@ -38,7 +38,7 @@ public class Family {
     @ApiModelProperty(value="报名人的身份证号",required = true)
     private String id;
     @ApiModelProperty(value="家庭成员",hidden = true)
-    private List<Person> familyMember;
+    private List<Students> familyMember;
 
 
 }
