@@ -30,4 +30,9 @@ public class ManagerServiceImpl implements ManagerService {
     public int insert(Manage manager) {
         return manageMapper.insert(manager);
     }
+
+    @Override
+    public Manage queryByName(String name) {
+        return manageMapper.query(name);
+    }
 }

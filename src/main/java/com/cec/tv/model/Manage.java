@@ -32,6 +32,8 @@ public class Manage {
     private String islogin;
     @ApiModelProperty(value="创建时间",required=true)
     private Date createtime;
+    @ApiModelProperty(value="校验登录状态",required=true)
+    private String token;
 
 
 

@@ -1,13 +1,15 @@
 package com.cec.tv.config;
 
+import com.cec.tv.interceptor.LoginInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    @Autowired
+    LoginInterceptor mLoginInterceptor;
+
     /**
      * 防止@EnableMvc把默认的静态资源路径覆盖了，手动设置的方式
      *
@@ -28,4 +30,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(mLoginInterceptor)
+                .addPathPatterns("/manager/**")
+                .excludePathPatterns("/user/**")
+                .excludePathPatterns("/air/**");
+    }
 }

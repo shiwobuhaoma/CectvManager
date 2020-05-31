@@ -5,6 +5,7 @@ import com.cec.tv.result.ResponseMessage;
 import com.cec.tv.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
+@Ignore
 @Api(tags = "角色相关接口", description = "提供角色相关的API")
 @RestController
 @RequestMapping("/role/")

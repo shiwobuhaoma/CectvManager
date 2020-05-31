@@ -1,15 +1,21 @@
 package com.cec.tv.interceptor;
 
-import com.cec.tv.model.User;
+import com.cec.tv.model.Manage;
+import com.cec.tv.service.ManagerService;
+import com.cec.tv.utils.TextUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-//@Component
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    ManagerService mManagerService;
     /*
  * 进入controller层之前拦截请求
  * 返回值：表示是否将当前的请求拦截下来  false：拦截请求，请求别终止。true：请求不被拦截，继续执行
@@ -17,16 +23,22 @@ public class LoginInterceptor implements HandlerInterceptor {
  */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("执行到了preHandle方法");
-        System.out.println(handler);
-//        User user = (User) request.getSession().getAttribute("session_user");
-//        if (user==null){
-//            response.sendRedirect(request.getContextPath()+"/loginUser");//拦截后跳转的方法
-//            System.out.println("已成功拦截并转发跳转");
-//            return false;
-//        }
-        System.out.println("合格不需要拦截，放行");
-        return true;
+        String token = request.getParameter("token");
+        String name = request.getParameter("name");
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(token)){
+            return false;
+        }
+        Manage manage = mManagerService.queryByName(name);
+        if(manage != null){
+            String token1 = manage.getToken();
+            if (token.equals(token1)){
+                return true;
+            }else {
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
     /*
      * 处理请求完成后视图渲染之前的处理操作
@@ -34,13 +46,13 @@ public class LoginInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-        System.out.println("执行了postHandle方法");
+
     }
     /*
      * 视图渲染之后的操作
      */
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-        System.out.println("执行到了afterCompletion方法");
+
     }
 }

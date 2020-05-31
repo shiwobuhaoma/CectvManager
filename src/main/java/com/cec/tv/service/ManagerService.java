@@ -15,4 +15,6 @@ public interface ManagerService {
     int updateLoginState(Manage manager);
 
     int insert(Manage manager);
+
+    Manage queryByName(String name);
 }

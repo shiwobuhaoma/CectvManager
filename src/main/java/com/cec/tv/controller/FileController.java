@@ -7,6 +7,7 @@ import com.cec.tv.service.ImagePathService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.RequestContext;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 
-
+@Ignore
 @Api(tags = "上传图片或者视频相关接口")
 @RequestMapping(value = "/file/")
 @RestController

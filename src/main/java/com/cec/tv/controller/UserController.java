@@ -10,14 +10,16 @@ import com.cec.tv.service.ManagerService;
 import com.cec.tv.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@Api(tags = "用户相关接口", description = "提供用户相关的API")
+@Api(tags = "空乘人才报名项目登录、退出相关接口", description = "提供用户相关的API")
 @RequestMapping("/user/")
 @RestController
 public class UserController {
@@ -28,6 +30,7 @@ public class UserController {
     @Autowired
     private ManagerService managerService;
 
+    @Ignore
     @ApiOperation(value = "用户登录接口", httpMethod = "POST")
     @Transactional
     @ResponseBody
@@ -65,7 +68,7 @@ public class UserController {
     @Transactional
     @ResponseBody
     @RequestMapping(value = "manageOrOrganLogin", method = {RequestMethod.POST})
-    public ResponseMessage<String> manageOrOrganLogin(@RequestBody Manage manage) {
+    public ResponseMessage<String> manageOrOrganLogin(@RequestBody Manage manage, HttpServletRequest request) {
         ResponseMessage<String> result = new ResponseMessage<>();
         if (manage != null) {
             String manageName = manage.getName();
@@ -85,6 +88,7 @@ public class UserController {
                     manager.setIslogin("1");
                     int i = managerService.updateLoginState(manager);
                     if (i > 0) {
+                        result.setToken(request.getSession().getId());
                         result.setSuccess("登录成功");
                     } else {
                         result.setFailure("登录写入数据库错误");
@@ -126,6 +130,7 @@ public class UserController {
         return result;
     }
 
+    @Ignore
     @ApiOperation(value = "退出登录接口", httpMethod = "POST")
     @ResponseBody
 //    @RequiresAuthentication
@@ -143,6 +148,7 @@ public class UserController {
         return result;
     }
 
+    @Ignore
     @ApiOperation(value = "忘记密码", httpMethod = "POST")
     @ResponseBody
     @RequestMapping("forgetPwd")
@@ -174,6 +180,7 @@ public class UserController {
         return result;
     }
 
+    @Ignore
     @ApiOperation(value = "注册接口", httpMethod = "POST")
     @Transactional
     @ResponseBody

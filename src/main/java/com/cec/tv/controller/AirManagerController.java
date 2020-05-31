@@ -35,7 +35,7 @@ public class AirManagerController {
     @Autowired
     StudentsService mStudentsService;
 
-    @ApiOperation(value = "根据机构ID查询机构的权限接口", httpMethod = "POST")
+    @ApiOperation(value = "根据机构ID查询机构的权限接口,需要登录", httpMethod = "POST")
     @Transactional
     @ResponseBody
     @RequestMapping(value = "queryPermission", method = {RequestMethod.POST})
@@ -60,7 +60,7 @@ public class AirManagerController {
     }
 
 
-    @ApiOperation(value = "给机构分配账号接口,此接口已经分配好角色和权限", httpMethod = "POST")
+    @ApiOperation(value = "给机构分配账号接口,此接口已经分配好角色和权限,需要登录", httpMethod = "POST")
     @Transactional
     @ResponseBody
     @RequestMapping(value = "insertAirOrganManager", method = {RequestMethod.POST})
@@ -82,7 +82,7 @@ public class AirManagerController {
     }
 
 
-    @ApiOperation(value = "机构查询某段时间学生的报名列表接口", httpMethod = "POST")
+    @ApiOperation(value = "机构查询某段时间学生的报名列表接口,需要登录", httpMethod = "POST")
     @Transactional
     @ResponseBody
     @RequestMapping(value = "organQueryStudentsByTime", method = {RequestMethod.POST})
@@ -116,7 +116,7 @@ public class AirManagerController {
             Date startDate = DateUtil.convertDateStrToDate(startTime, "date");
             if (endTime == null || "".equals(endTime)){
 
-                Date endDate = DateUtil.getCurrTime();
+//                Date endDate = DateUtil.getCurrTime();
                 students = mStudentsService.queryStudentsOrderByOnlyStartTime(managerId,startDate);
             }else{
                 //如果有起始时间，并且结束时间也有值，就是查询起始时间到结束时间之间报名的所有学生信息
@@ -130,7 +130,7 @@ public class AirManagerController {
     }
 
 
-    @ApiOperation(value = "根据机构ID查询机构的角色接口", httpMethod = "POST")
+    @ApiOperation(value = "根据机构ID查询机构的角色接口,需要登录", httpMethod = "POST")
     @Transactional
     @ResponseBody
     @RequestMapping(value = "queryRole", method = {RequestMethod.POST})

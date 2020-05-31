@@ -26,7 +26,6 @@ import java.util.UUID;
 @RestController
 public class AirController {
 
-    String[] fileSuffixName = {"jpg", "png", "bmp", "mp4"};
 
     @Autowired
     private StudentsService studentsService;

@@ -6,11 +6,13 @@ import com.cec.tv.result.ResponseMessage;
 import com.cec.tv.service.ChannelService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@Ignore
 @Api(tags = "频道相关接口", description = "提供频道相关的API")
 @RestController
 @RequestMapping(value = "/channel/")

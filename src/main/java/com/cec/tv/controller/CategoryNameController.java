@@ -7,6 +7,7 @@ import com.cec.tv.result.ResultEnum;
 import com.cec.tv.service.CategoryNameService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+@Ignore
 @Api(tags = "新闻分类相关接口", description = "提供新闻分类相关的API")
 @RestController
 @RequestMapping("/category/")
