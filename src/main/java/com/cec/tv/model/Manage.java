@@ -18,21 +18,22 @@ import java.util.Date;
 @TableName("air_manage")
 public class Manage {
     @TableId(value = "id",type = IdType.AUTO)//指定自增策略
+    @ApiModelProperty(hidden = true)
     private String id;
 
     @ApiModelProperty(value="机构登录账号",required=true)
     private String name;
     @ApiModelProperty(value="机构登录密码",required=true)
     private String password;
-    @ApiModelProperty(value="机构权限id",required=true)
+    @ApiModelProperty(value="机构权限id")
     private String permissionid;
-    @ApiModelProperty(value="机构角色id",required=true)
+    @ApiModelProperty(value="机构角色id")
     private String roleid;
-    @ApiModelProperty(value="登录状态，1登录状态，0未登录状态",required=true)
+    @ApiModelProperty(value="登录状态，1登录状态，0未登录状态")
     private String islogin;
-    @ApiModelProperty(value="创建时间",required=true)
+    @ApiModelProperty(value="创建时间")
     private Date createtime;
-    @ApiModelProperty(value="校验登录状态",required=true)
+    @ApiModelProperty(value="校验登录状态")
     private String token;
 
 

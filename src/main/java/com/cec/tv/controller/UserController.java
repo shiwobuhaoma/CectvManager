@@ -1,15 +1,16 @@
 package com.cec.tv.controller;
 
 
-import com.cec.tv.dao.ManageMapper;
 import com.cec.tv.model.Manage;
 import com.cec.tv.model.User;
 import com.cec.tv.result.ResponseMessage;
 import com.cec.tv.result.ResultEnum;
 import com.cec.tv.service.ManagerService;
 import com.cec.tv.service.UserService;
+import com.cec.tv.utils.TextUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,27 +69,26 @@ public class UserController {
     @Transactional
     @ResponseBody
     @RequestMapping(value = "manageOrOrganLogin", method = {RequestMethod.POST})
-    public ResponseMessage<String> manageOrOrganLogin(@RequestBody Manage manage, HttpServletRequest request) {
-        ResponseMessage<String> result = new ResponseMessage<>();
-        if (manage != null) {
-            String manageName = manage.getName();
-            if (manageName == null || "".equals(manageName)) {
-                result.setFailure("用户名为空");
-                return result;
-            }
-            String managePassWord = manage.getPassword();
-            if (managePassWord == null || "".equals(managePassWord)) {
-                result.setFailure("密码为空");
-                return result;
-            }
-            Manage manager = managerService.login(manageName);
+    public ResponseMessage<Manage> manageOrOrganLogin(
+            @ApiParam(name="name",value="账号",required=true)  @RequestParam String name,
+            @ApiParam(name="password",value="密码",required=true) @RequestParam String password,
+            HttpServletRequest request) {
+        ResponseMessage<Manage> result = new ResponseMessage<>();
+        if (TextUtils.isEmpty(name)){
+            result.setFailure("用户名为空");
+            return result;
+        }else{
+            Manage manager = managerService.login(name);
             if (manager != null) {
-                String password = manager.getPassword();
-                if (managePassWord.equals(password)) {
+                String passwordDb = manager.getPassword();
+                if (passwordDb.equals(password)) {
                     manager.setIslogin("1");
+                    String token = request.getSession().getId();
+                    manager.setToken(token);
                     int i = managerService.updateLoginState(manager);
                     if (i > 0) {
-                        result.setToken(request.getSession().getId());
+                        result.setData(manager);
+                        result.setToken(token);
                         result.setSuccess("登录成功");
                     } else {
                         result.setFailure("登录写入数据库错误");
@@ -100,9 +100,8 @@ public class UserController {
                 result.setFailure("账户不存在");
             }
 
-        } else {
-            result.setFailure("参数为空");
         }
+
         return result;
     }
 
@@ -112,7 +111,7 @@ public class UserController {
     @Transactional
     @ResponseBody
     @RequestMapping(value = "manageOrOrganLogout", method = {RequestMethod.POST})
-    public ResponseMessage<String> manageOrOrganLogout(@RequestBody String managerId) {
+    public ResponseMessage<String> manageOrOrganLogout(@RequestParam String managerId) {
         ResponseMessage<String> result = new ResponseMessage<>();
         if (managerId == null || "".equals(managerId)) {
             result.setFailure("id为空");

@@ -22,16 +22,19 @@
   <select id="query" resultType="com.cec.tv.model.Manage"  parameterType="java.lang.String">
     select * from air_manage where name = #{name,jdbcType=VARCHAR}
   </select>
+  <select id="queryByToken" resultType="com.cec.tv.model.Manage"  parameterType="java.lang.String">
+    select * from air_manage where token = #{token,jdbcType=VARCHAR}
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from air_manage
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.cec.tv.model.Manage" >
-    insert into air_manage (id, name, password, 
-      permissionId, roleId,islogin)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{permissionid,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}, #{islogin,jdbcType=VARCHAR})
+    insert into air_manage (name, password,
+    roleId)
+    values (#{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+     #{roleid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cec.tv.model.Manage" >
     insert into air_manage
@@ -100,6 +103,9 @@
   <update id="updateLoginState" parameterType="com.cec.tv.model.Manage" >
     update air_manage
     <set >
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
       <if test="islogin != null" >
         islogin = #{islogin,jdbcType=VARCHAR},
       </if>

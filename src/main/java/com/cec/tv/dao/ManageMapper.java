@@ -20,4 +20,6 @@ public interface ManageMapper {
     int updateByPrimaryKey(Manage record);
 
     Manage query(String name);
+
+    Manage queryByToken(String token);
 }

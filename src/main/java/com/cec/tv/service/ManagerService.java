@@ -17,4 +17,6 @@ public interface ManagerService {
     int insert(Manage manager);
 
     Manage queryByName(String name);
+
+    Manage queryByToken(String token);
 }

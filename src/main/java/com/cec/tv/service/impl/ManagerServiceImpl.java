@@ -35,4 +35,9 @@ public class ManagerServiceImpl implements ManagerService {
     public Manage queryByName(String name) {
         return manageMapper.query(name);
     }
+
+    @Override
+    public Manage queryByToken(String token) {
+        return manageMapper.queryByToken(token);
+    }
 }

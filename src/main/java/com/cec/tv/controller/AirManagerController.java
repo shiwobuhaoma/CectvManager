@@ -10,9 +10,11 @@ import com.cec.tv.service.AirOrganManagerRoleService;
 import com.cec.tv.service.ManagerService;
 import com.cec.tv.service.StudentsService;
 import com.cec.tv.utils.DateUtil;
+import com.cec.tv.utils.TextUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.catalina.Manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -65,11 +67,21 @@ public class AirManagerController {
     @ResponseBody
     @RequestMapping(value = "insertAirOrganManager", method = {RequestMethod.POST})
     ResponseMessage<String> insertAirOrganManager(
-            @ApiParam(name="manager",value="机构实体",required=true) @RequestBody Manage manager) {
+//            @ApiParam(name="manager",value="机构实体",required=true) @RequestBody Manage manager,
+            @ApiParam(name="name",value="机构账号",required=true)  @RequestParam String name,
+            @ApiParam(name="password",value="机构密码",required=true)  @RequestParam String password
+    ) {
         ResponseMessage<String> result = new ResponseMessage<>();
-        if (manager == null) {
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(password) ) {
             result.setFailure("参数不全");
         } else {
+            Manage manager = new Manage();
+            manager.setName(name);
+            manager.setPassword(password);
+            //1代表后台管理员，2代表机构
+            manager.setRoleid("2");
+            manager.setCreatetime(new Date());
             //给air_manage表增加数据
             int i = mManagerService.insert(manager);
             if (i > 0) {
@@ -88,12 +100,13 @@ public class AirManagerController {
     @RequestMapping(value = "organQueryStudentsByTime", method = {RequestMethod.POST})
     ResponseMessage<List<Students>> organQueryStudentsByTime(
             @ApiParam(name="managerId",value="机构id",required=true) @RequestParam String managerId,
-            @ApiParam(name="startTime",value="开始时间",required=true) @RequestParam String startTime,
-            @ApiParam(name="endTime",value="结束时间",required=true) @RequestParam String endTime) {
+            @ApiParam(name="startTime",value="开始时间") @RequestParam String startTime,
+            @ApiParam(name="endTime",value="结束时间") @RequestParam String endTime) {
         ResponseMessage<List<Students>> result = new ResponseMessage<>();
         if (managerId == null || "".equals(managerId)) {
-            result.setFailure("managerId为空");
+            result.setFailure("您没有权限");
             result.setData(new ArrayList<>());
+            return result;
         }
         //如果起始时间没有，
         List<Students> students = null;
