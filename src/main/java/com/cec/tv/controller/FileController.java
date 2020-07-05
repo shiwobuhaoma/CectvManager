@@ -1,9 +1,11 @@
 package com.cec.tv.controller;
 
-import java.util.UUID;
 
+import com.cec.tv.model.Students;
 import com.cec.tv.result.ResponseMessage;
-import com.cec.tv.service.ImagePathService;
+import com.cec.tv.service.StudentsService;
+import com.cec.tv.utils.TextUtils;
+import com.cec.tv.utils.ThumbnailsUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -35,69 +37,89 @@ public class FileController {
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
-    ImagePathService mImagePathService;
+    StudentsService mStudentsService;
 
     @ApiOperation(value = "单文件上传接口", httpMethod = "POST")
     @ResponseBody
     @RequestMapping(value = "upload")
     public ResponseMessage<String> upload(
-            @ApiParam(name = "type", value = "上传图片的类型【（imgpath：1寸照片，fullfacephotopath：正面照，sidefacephotopath：侧面照，fullbodyphotopath：全身照，videointroduction：视频介绍）】", required = true) @RequestParam String type,
-            @ApiParam(name = "id", value = "身份证号", required = true) @RequestParam String id,
-            @ApiParam(name = "file", value = "文件", required = true) @RequestParam("file") MultipartFile[] file
+            @ApiParam(name = "type", value = "上传图片的类型【（imgpath：1寸照片，" +
+                    "fullfacephotopath：正面照，" +
+                    "sidefacephotopath：侧面照，" +
+                    "fullbodyphotopath：全身照，" +
+                    "videointroduction：视频介绍）】", required = true) @RequestParam String type,
+            @ApiParam(name = "mobile", value = "手机号", required = true) @RequestParam String mobile,
+            @ApiParam(name = "name", value = "报名人的姓名", required = true) @RequestParam String name,
+            @ApiParam(name = "file", value = "文件", required = true) @RequestParam("file") MultipartFile file
     ) throws Exception {
         ResponseMessage<String> result = new ResponseMessage<>();
-        // 设置文件存储路径
-        StringBuilder filePath = new StringBuilder("/picture");
-        try {
-            int j = 0;
-
-            for (int i = 0; i < file.length; i++) {
-                // 获取文件名
-                String fileName = file[i].getOriginalFilename();
-                log.info("上传的文件名为：" + fileName);
-                // 获取文件的后缀名
-                String suffixName = fileName.substring(fileName.lastIndexOf("."));
-                ;
-                log.info("文件的后缀名为：" + suffixName);
+        if (TextUtils.isEmpty(mobile) || TextUtils.isEmpty(name)) {
+            return result.setFailure("需要填写手机号和姓名");
+        }
+        if (file == null) {
+            return result.setFailure("需要上传文件");
+        } else {
+            try {
+                // 设置文件存储路径
+                StringBuilder filePath = new StringBuilder("/upload");
+                filePath.append(File.separator).append(name).append(mobile).append(File.separator);
                 File dirFile = new File(filePath.toString());
                 if (!dirFile.exists()) {
                     dirFile.mkdirs();
                 }
-                String path = filePath.append(System.currentTimeMillis()).append(suffixName).toString();
-                File dest = new File(path);
-                // 检测是否存在目录
-                if (!dest.getParentFile().exists()) {
-                    dest.getParentFile().mkdirs();// 新建文件夹
-                }
-                file[i].transferTo(dest);// 文件写入
-                int i1 = mImagePathService.insertPath(filePath.toString(), id, type);
-                if (i1 > 0) {
-                    j++;
+                // 获取文件名
+                String fileName = file.getOriginalFilename();
+                log.info("上传的文件名为：" + fileName);
+                // 获取文件的后缀名
+                assert fileName != null;
+                String suffixName = fileName.substring(fileName.lastIndexOf("."));
+                log.info("文件的后缀名为：" + suffixName);
+                Students student = new Students();
+                student.setMobile(mobile);
+                String path = "";
+                if ("fullfacephotopath".equals(type)) {
+                    path = filePath.append("正面照").append(suffixName).toString();
+                    if (big600KB(file)) {
+                        ThumbnailsUtil.compressPic(file.getOriginalFilename(), path);
+                    }
+                    student.setFullfacephotopath(path);
+                } else if ("sidefacephotopath".equals(type)) {
+                    path = filePath.append("侧面照").append(suffixName).toString();
+                    if (big600KB(file)) {
+                        ThumbnailsUtil.compressPic(file.getOriginalFilename(), path);
+                    }
+                    student.setSidefacephotopath(path);
+                } else if ("fullbodyphotopath".equals(type)) {
+                    path = filePath.append("全身照").append(suffixName).toString();
+                    if (big600KB(file)) {
+                        ThumbnailsUtil.compressPic(file.getOriginalFilename(), path);
+                    }
+                    student.setFullbodyphotopath(path);
                 } else {
-                    result.setMessage("上传第" + i + "个文件时失败");
-                    return result;
+                    path = filePath.append("视频介绍").append(suffixName).toString();
+                    if (big6M(file)) {
+                        ThumbnailsUtil.compressPic(file.getOriginalFilename(), path);
+                    }
+
+                    student.setVideointroduction(path);
+                }
+                // 文件写入
+//                File dest = new File(path);
+//                file.transferTo(dest);
+
+                int i1 = mStudentsService.update(student);
+                if (i1 > 0) {
+                    return result.setSuccess("上传成功");
+                } else {
+                    return result.setFailure("写入数据库错误");
                 }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+                return result.setFailure(e.getMessage());
             }
-            if (j == file.length) {
-                return result.setSuccess("上传成功");
-            } else {
-                return result.setFailure("数据库写入文件路径失败");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-
         }
-        return result.setFailure("上传失败");
-    }
 
-    private boolean biggerThanOneM(@RequestParam("file") MultipartFile file) {
-        if (isBigThanOneM(file)) {
-            return true;
-        }
-        return false;
     }
 
     @ApiOperation(value = "批量文件上传接口", httpMethod = "POST")
@@ -202,12 +224,11 @@ public class FileController {
         return result.setFailure("下载失败");
     }
 
+    private boolean big600KB(MultipartFile file) {
+        return file.getSize() >= 6 * 100 * 1024;
+    }
 
-    private boolean isBigThanOneM(MultipartFile file) {
-        if (file.getSize() > 1024 * 1024) {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean big6M(MultipartFile file) {
+        return file.getSize() >= 6 * 1024 * 1024;
     }
 }

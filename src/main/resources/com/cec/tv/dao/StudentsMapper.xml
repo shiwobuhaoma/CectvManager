@@ -27,25 +27,18 @@
     from students
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <select id="selectByOrganId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByOrganId" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />
     from students
-    where organid = #{organid,jdbcType=VARCHAR}
-  </select>
-  <select id="queryStudentsOrderByEndTime" resultMap="BaseResultMap" parameterType="java.util.Date" >
-    select
-    <include refid="Base_Column_List" />
-    from students
-    where organid = #{organid,jdbcType=VARCHAR} and (createtime=#{createtime,jdbcType=DATE})
-    order by createtime
+    where organid = #{organid,jdbcType=VARCHAR} order by createtime desc
   </select>
   <select id="queryStudentsOrderByStartTime" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />
     from students
     where organid = #{organid,jdbcType=VARCHAR} and (now() &gt;=  #{createtime,jdbcType=DATE})
-    order by createtime
+    order by createtime desc
   </select>
   <select id="queryStudentsOrderByEndTime" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
@@ -59,24 +52,25 @@
     <include refid="Base_Column_List" />
     from students
     where organid = #{organid,jdbcType=VARCHAR} and (createtime between #{starttime,jdbcType=DATE} and #{endtime,jdbcType=DATE})
-    order by createtime
+    order by createtime desc
   </select>
+
+  <select id="queryAllByStartAndEndTime" parameterType="java.util.Map" resultMap="BaseResultMap">
+     select
+     <include refid="Base_Column_List" />
+     from students
+     where createtime between #{starttime,jdbcType=DATE} and #{endtime,jdbcType=DATE}
+    order by createtime desc
+  </select>
+
+  <select id="queryTotalCountByOrganId" resultType="java.lang.Integer" >
+    select COUNT(id) from students where organid = #{organid,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from students
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.cec.tv.model.Students" >
-    insert into students (id, name, sex,
-      age, height,mobile,  fullfacephotopath, isorgansignin,organid,createtime,imgpath,
-      sidefacephotopath, fullbodyphotopath, videointroduction
-      )
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, 
-      #{age,jdbcType=INTEGER}, #{height,jdbcType=INTEGER},
-     #{mobile,jdbcType=VARCHAR},  #{isorgansignin,jdbcType=VARCHAR},  #{organid,jdbcType=VARCHAR},
-     #{createtime,jdbcType=DATE}, #{imgpath,jdbcType=VARCHAR},#{fullfacephotopath,jdbcType=VARCHAR},
-      #{sidefacephotopath,jdbcType=VARCHAR}, #{fullbodyphotopath,jdbcType=VARCHAR}, #{videointroduction,jdbcType=VARCHAR}
-      )
-  </insert>
   <insert id="insertSelective" parameterType="com.cec.tv.model.Students" >
     insert into students
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -211,7 +205,7 @@
         videointroduction = #{videointroduction,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=VARCHAR}
+    where mobile = #{mobile,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cec.tv.model.Students" >
     update students

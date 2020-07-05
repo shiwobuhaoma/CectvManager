@@ -4,15 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 @ApiModel("新闻实体")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("news")
 public class News {
     @ApiModelProperty(value="id",allowEmptyValue = true,hidden=true)
@@ -39,5 +33,67 @@ public class News {
     @TableField(value = "new_category")
     private Integer newCategory;
 
+    public Integer getId() {
+        return id;
+    }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    public Integer getHaveImg() {
+        return haveImg;
+    }
+
+    public void setHaveImg(Integer haveImg) {
+        this.haveImg = haveImg;
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Integer getNewCategory() {
+        return newCategory;
+    }
+
+    public void setNewCategory(Integer newCategory) {
+        this.newCategory = newCategory;
+    }
 }

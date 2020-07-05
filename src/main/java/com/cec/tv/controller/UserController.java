@@ -3,6 +3,8 @@ package com.cec.tv.controller;
 
 import com.cec.tv.model.Manage;
 import com.cec.tv.model.User;
+import com.cec.tv.requestparam.OrganLoginParam;
+import com.cec.tv.requestparam.OrganLogoutParam;
 import com.cec.tv.result.ResponseMessage;
 import com.cec.tv.result.ResultEnum;
 import com.cec.tv.service.ManagerService;
@@ -10,7 +12,6 @@ import com.cec.tv.service.UserService;
 import com.cec.tv.utils.TextUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,38 +70,41 @@ public class UserController {
     @Transactional
     @ResponseBody
     @RequestMapping(value = "manageOrOrganLogin", method = {RequestMethod.POST})
-    public ResponseMessage<Manage> manageOrOrganLogin(
-            @ApiParam(name="name",value="账号",required=true)  @RequestParam String name,
-            @ApiParam(name="password",value="密码",required=true) @RequestParam String password,
+    public ResponseMessage<Manage> manageOrOrganLogin(@RequestBody OrganLoginParam organLoginParam,
             HttpServletRequest request) {
         ResponseMessage<Manage> result = new ResponseMessage<>();
-        if (TextUtils.isEmpty(name)){
-            result.setFailure("用户名为空");
-            return result;
-        }else{
-            Manage manager = managerService.login(name);
-            if (manager != null) {
-                String passwordDb = manager.getPassword();
-                if (passwordDb.equals(password)) {
-                    manager.setIslogin("1");
-                    String token = request.getSession().getId();
-                    manager.setToken(token);
-                    int i = managerService.updateLoginState(manager);
-                    if (i > 0) {
-                        result.setData(manager);
-                        result.setToken(token);
-                        result.setSuccess("登录成功");
+        if (organLoginParam != null){
+            if (TextUtils.isEmpty(organLoginParam.getName())){
+                result.setFailure("用户名为空");
+                return result;
+            }else{
+                Manage manager = managerService.login(organLoginParam.getName());
+                if (manager != null) {
+                    String passwordDb = manager.getPassword();
+                    if (passwordDb.equals(organLoginParam.getPassword())) {
+                        manager.setIslogin("1");
+                        String token = request.getSession().getId();
+                        manager.setToken(token);
+                        int i = managerService.updateLoginState(manager);
+                        if (i > 0) {
+                            result.setData(manager);
+                            result.setToken(token);
+                            result.setSuccess("登录成功");
+                        } else {
+                            result.setFailure("登录写入数据库错误");
+                        }
                     } else {
-                        result.setFailure("登录写入数据库错误");
+                        result.setFailure("密码错误");
                     }
                 } else {
-                    result.setFailure("密码错误");
+                    result.setFailure("账户不存在");
                 }
-            } else {
-                result.setFailure("账户不存在");
-            }
 
+            }
+        }else{
+            result.setFailure("参数为空");
         }
+
 
         return result;
     }
@@ -111,21 +115,24 @@ public class UserController {
     @Transactional
     @ResponseBody
     @RequestMapping(value = "manageOrOrganLogout", method = {RequestMethod.POST})
-    public ResponseMessage<String> manageOrOrganLogout(@RequestParam String managerId) {
+    public ResponseMessage<String> manageOrOrganLogout(@RequestBody OrganLogoutParam organLogoutParam) {
         ResponseMessage<String> result = new ResponseMessage<>();
-        if (managerId == null || "".equals(managerId)) {
-            result.setFailure("id为空");
-        }else{
-            Manage manager = new Manage();
-            manager.setId(managerId);
-            manager.setIslogin("0");
-            int i = managerService.updateLoginState(manager);
-            if (i > 0) {
-                result.setSuccess("退出成功");
-            } else {
-                result.setFailure("退出登录，写入数据库错误");
+        if (organLogoutParam != null){
+            if (TextUtils.isEmpty(organLogoutParam.getManagerId())) {
+                result.setFailure("参数为空");
+            }else{
+                Manage manager = new Manage();
+                manager.setId(organLogoutParam.getManagerId());
+                manager.setIslogin("0");
+                int i = managerService.updateLoginState(manager);
+                if (i > 0) {
+                    result.setSuccess("退出成功");
+                } else {
+                    result.setFailure("退出登录，写入数据库错误");
+                }
             }
         }
+
         return result;
     }
 
@@ -201,4 +208,7 @@ public class UserController {
         }
         return result;
     }
+
+
+
 }

@@ -3,17 +3,10 @@ package com.cec.tv.model;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @ApiModel("空乘人才报名项目学生实体")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("person")
 public class Students {
     @ApiModelProperty(value="学生id",required = true)
@@ -81,10 +74,271 @@ public class Students {
     private String whichlink;
     @ApiModelProperty(value="文化程度（传字符串：统招，自考，成考，函授）", hidden = true)
     private String levelofeducation;
+    @ApiModelProperty(value="报名时间")
+    private Date createtime;
 
-    @ApiModelProperty(value="工作经历", hidden = true)
-    private List<Job> jobList;
-    @ApiModelProperty(value="家庭成员", hidden = true)
-    private Family family;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getImgpath() {
+        return imgpath;
+    }
+
+    public void setImgpath(String imgpath) {
+        this.imgpath = imgpath;
+    }
+
+    public String getIsorgansignin() {
+        return isorgansignin;
+    }
+
+    public void setIsorgansignin(String isorgansignin) {
+        this.isorgansignin = isorgansignin;
+    }
+
+    public String getOrganid() {
+        return organid;
+    }
+
+    public void setOrganid(String organid) {
+        this.organid = organid;
+    }
+
+    public String getFullfacephotopath() {
+        return fullfacephotopath;
+    }
+
+    public void setFullfacephotopath(String fullfacephotopath) {
+        this.fullfacephotopath = fullfacephotopath;
+    }
+
+    public String getSidefacephotopath() {
+        return sidefacephotopath;
+    }
+
+    public void setSidefacephotopath(String sidefacephotopath) {
+        this.sidefacephotopath = sidefacephotopath;
+    }
+
+    public String getFullbodyphotopath() {
+        return fullbodyphotopath;
+    }
+
+    public void setFullbodyphotopath(String fullbodyphotopath) {
+        this.fullbodyphotopath = fullbodyphotopath;
+    }
+
+    public String getVideointroduction() {
+        return videointroduction;
+    }
+
+    public void setVideointroduction(String videointroduction) {
+        this.videointroduction = videointroduction;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getWx() {
+        return wx;
+    }
+
+    public void setWx(String wx) {
+        this.wx = wx;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPostaladdress() {
+        return postaladdress;
+    }
+
+    public void setPostaladdress(String postaladdress) {
+        this.postaladdress = postaladdress;
+    }
+
+    public String getResidentialaddress() {
+        return residentialaddress;
+    }
+
+    public void setResidentialaddress(String residentialaddress) {
+        this.residentialaddress = residentialaddress;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Double getLefteye() {
+        return lefteye;
+    }
+
+    public void setLefteye(Double lefteye) {
+        this.lefteye = lefteye;
+    }
+
+    public Double getRighteye() {
+        return righteye;
+    }
+
+    public void setRighteye(Double righteye) {
+        this.righteye = righteye;
+    }
+
+    public String getGraduateschool() {
+        return graduateschool;
+    }
+
+    public void setGraduateschool(String graduateschool) {
+        this.graduateschool = graduateschool;
+    }
+
+    public String getGraduationtime() {
+        return graduationtime;
+    }
+
+    public void setGraduationtime(String graduationtime) {
+        this.graduationtime = graduationtime;
+    }
+
+    public String getEducationlevel() {
+        return educationlevel;
+    }
+
+    public void setEducationlevel(String educationlevel) {
+        this.educationlevel = educationlevel;
+    }
+
+    public String getEnglishlevel() {
+        return englishlevel;
+    }
+
+    public void setEnglishlevel(String englishlevel) {
+        this.englishlevel = englishlevel;
+    }
+
+    public String getAirinterview() {
+        return airinterview;
+    }
+
+    public void setAirinterview(String airinterview) {
+        this.airinterview = airinterview;
+    }
+
+    public String getWhichlink() {
+        return whichlink;
+    }
+
+    public void setWhichlink(String whichlink) {
+        this.whichlink = whichlink;
+    }
+
+    public String getLevelofeducation() {
+        return levelofeducation;
+    }
+
+    public void setLevelofeducation(String levelofeducation) {
+        this.levelofeducation = levelofeducation;
+    }
+
+    public Date getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
 }

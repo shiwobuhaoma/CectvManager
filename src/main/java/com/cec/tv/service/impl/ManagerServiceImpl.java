@@ -6,6 +6,8 @@ import com.cec.tv.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ManagerServiceImpl implements ManagerService {
     @Autowired
@@ -28,7 +30,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public int insert(Manage manager) {
-        return manageMapper.insert(manager);
+        return manageMapper.insertSelective(manager);
     }
 
     @Override
@@ -39,5 +41,10 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public Manage queryByToken(String token) {
         return manageMapper.queryByToken(token);
+    }
+
+    @Override
+    public List<Manage> queryAllOrganList() {
+        return manageMapper.queryAllOrganList();
     }
 }

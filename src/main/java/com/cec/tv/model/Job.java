@@ -3,15 +3,9 @@ package com.cec.tv.model;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 @ApiModel("工作实体")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("job")
 public class Job {
     @ApiModelProperty(value="入职时间",required = true)
@@ -25,5 +19,43 @@ public class Job {
     @ApiModelProperty(value="身份证号",required = true)
     private String id;
 
+    public Date getStarttime() {
+        return starttime;
+    }
 
+    public void setStarttime(Date starttime) {
+        this.starttime = starttime;
+    }
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
+
+    public String getCompanyname() {
+        return companyname;
+    }
+
+    public void setCompanyname(String companyname) {
+        this.companyname = companyname;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

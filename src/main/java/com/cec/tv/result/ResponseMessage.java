@@ -1,15 +1,10 @@
 package com.cec.tv.result;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class ResponseMessage<T> implements Serializable {
+
     private String message;
     private String token;
     private String exception;
@@ -25,6 +20,10 @@ public class ResponseMessage<T> implements Serializable {
     public ResponseMessage(ResultEnum systemError) {
         this.code = systemError.getCode();
         this.message = systemError.getMsg();
+
+    }
+
+    public ResponseMessage() {
 
     }
 
@@ -51,4 +50,43 @@ public class ResponseMessage<T> implements Serializable {
 
     }
 
+    public void setData(T list) {
+        data = list;
+    }
+
+    public void setToken(String id) {
+        token = id;
+    }
+
+    public void setException(String message) {
+        exception = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public T getData() {
+        return data;
+    }
 }

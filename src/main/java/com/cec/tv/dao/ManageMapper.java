@@ -3,11 +3,11 @@ package com.cec.tv.dao;
 import com.cec.tv.model.Manage;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface ManageMapper {
     int deleteByPrimaryKey(String id);
-
-    int insert(Manage record);
 
     int insertSelective(Manage record);
 
@@ -22,4 +22,6 @@ public interface ManageMapper {
     Manage query(String name);
 
     Manage queryByToken(String token);
+
+    List<Manage> queryAllOrganList();
 }

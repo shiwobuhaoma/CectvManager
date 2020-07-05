@@ -3,7 +3,9 @@ package com.cec.tv.config;
 import com.cec.tv.interceptor.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -33,8 +35,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(mLoginInterceptor)
-                .addPathPatterns("/manager/**")
+                .addPathPatterns("/organ/**")
                 .excludePathPatterns("/user/**")
-                .excludePathPatterns("/air/**");
+                .excludePathPatterns("/file/**")
+                .excludePathPatterns("/signUp/**");
     }
+
+
 }

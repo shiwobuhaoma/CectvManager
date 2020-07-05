@@ -115,12 +115,12 @@ public class AirController {
             @ApiParam(name = "age", value = "年龄（24）", required = true) @RequestParam String age,
             @ApiParam(name = "height", value = "身高（176cm）", required = true) @RequestParam String height,
             @ApiParam(name = "mobile", value = "手机号码", required = true) @RequestParam String mobile,
-            @ApiParam(name = "isOrgan", value = "是不是机构报名，是传1，不是传0", required = true) @RequestParam String isOrgan,
-            @ApiParam(name = "organId", value = "机构代号,不是机构不传", required = true) @RequestParam String organId,
-            @ApiParam(name = "fullfacephoto", value = "正面半身照", required = true) @RequestParam("fullfacephoto") MultipartFile fullFacePhoto,
-            @ApiParam(name = "sidefacephoto", value = "侧面半身照", required = true) @RequestParam("sidefacephoto") MultipartFile sideFacePhoto,
-            @ApiParam(name = "fullbodyphoto", value = "全身照", required = true) @RequestParam("fullbodyphoto") MultipartFile fullBodyPhoto,
-            @ApiParam(name = "videointroduction", value = "1分钟视频自我介绍", required = true) @RequestParam("videointroduction") MultipartFile videoIntroduction
+            @ApiParam(name = "isOrgan", value = "是不是机构报名，是传1，不是传0", required = true) @RequestParam String isOrgan
+//            @ApiParam(name = "organId", value = "机构代号,不是机构不传") @RequestParam String organId,
+//            @ApiParam(name = "fullfacephoto", value = "正面半身照") @RequestParam("fullfacephoto") MultipartFile fullFacePhoto,
+//            @ApiParam(name = "sidefacephoto", value = "侧面半身照") @RequestParam("sidefacephoto") MultipartFile sideFacePhoto,
+//            @ApiParam(name = "fullbodyphoto", value = "全身照") @RequestParam("fullbodyphoto") MultipartFile fullBodyPhoto,
+//            @ApiParam(name = "videointroduction", value = "1分钟视频自我介绍") @RequestParam("videointroduction") MultipartFile videoIntroduction
     ) {
 
         ResponseMessage<String> result = new ResponseMessage<>();
@@ -132,7 +132,7 @@ public class AirController {
         }
         students.setName(name);
         students.setIsorgansignin(isOrgan);
-        students.setOrganid(organId);
+//        students.setOrganid(organId);
         students.setName(name);
         students.setSex("男".equals(sex) ? 1 : 0);
         students.setAge(Integer.valueOf(age));
@@ -141,68 +141,63 @@ public class AirController {
 
         String type = "";
 
-        if (big2M(fullFacePhoto)) {
-            result.setFailure("正面半身照大小不能超过2M");
-            return result;
-        }else{
-            type= "fullfacephoto";
-            boolean writeSuccess = writeFile2Location(fullFacePhoto, name, mobile, students,result,type);
-            if(!writeSuccess){
-                result.setFailure("正面半身照上传服务器有误");
-                return result;
-            }
+//        if (big2M(fullFacePhoto)) {
+//            result.setFailure("正面半身照大小不能超过2M");
+//            return result;
+//        }else{
+//            type= "fullfacephoto";
+//            boolean writeSuccess = writeFile2Location(fullFacePhoto, name, mobile, students,result,type);
+//            if(!writeSuccess){
+//                result.setFailure("正面半身照上传服务器有误");
+//                return result;
+//            }
+//
+//        }
+//        if (big2M(sideFacePhoto)) {
+//            result.setFailure("侧面半身照大小不能超过2M");
+//            return result;
+//        }else{
+//            type= "sidefacephoto";
+//            boolean writeSuccess =  writeFile2Location(sideFacePhoto,name,mobile,students, result,type);
+//            if(!writeSuccess){
+//                result.setFailure("侧面半身照上传服务器有误");
+//                return result;
+//            }
+//        }
+//        if (big2M(fullBodyPhoto)) {
+//            result.setFailure("全身照大小不能超过2M");
+//            return result;
+//        }else{
+//            type= "fullbodyphoto";
+//            boolean writeSuccess =  writeFile2Location(fullBodyPhoto,name,mobile,students, result,type);
+//            if(!writeSuccess){
+//                result.setFailure("全身照上传服务器有误");
+//                return result;
+//            }
+//        }
+//        if (big10M(videoIntroduction)) {
+//            result.setFailure("视频大小不能超过10M");
+//            return result;
+//        }else{
+//            type= "videointroduction";
+//            boolean writeSuccess =   writeFile2Location(videoIntroduction,name,mobile,students, result,type);
+//            if(!writeSuccess){
+//                result.setFailure("视频上传服务器有误");
+//                return result;
+//            }
+//        }
 
-        }
-        if (big2M(sideFacePhoto)) {
-            result.setFailure("侧面半身照大小不能超过2M");
-            return result;
-        }else{
-            type= "sidefacephoto";
-            boolean writeSuccess =  writeFile2Location(sideFacePhoto,name,mobile,students, result,type);
-            if(!writeSuccess){
-                result.setFailure("侧面半身照上传服务器有误");
-                return result;
-            }
-        }
-        if (big2M(fullBodyPhoto)) {
-            result.setFailure("全身照大小不能超过2M");
-            return result;
-        }else{
-            type= "fullbodyphoto";
-            boolean writeSuccess =  writeFile2Location(fullBodyPhoto,name,mobile,students, result,type);
-            if(!writeSuccess){
-                result.setFailure("全身照上传服务器有误");
-                return result;
-            }
-        }
-        if (big10M(videoIntroduction)) {
-            result.setFailure("视频大小不能超过10M");
-            return result;
-        }else{
-            type= "videointroduction";
-            boolean writeSuccess =   writeFile2Location(videoIntroduction,name,mobile,students, result,type);
-            if(!writeSuccess){
-                result.setFailure("视频上传服务器有误");
-                return result;
-            }
-        }
-
-        int i = studentsService.commitPersonDetailInformation(students);
-        if (i == 0) {
-            result.setFailure("提交失败");
-        } else {
-            result.setSuccess("提交成功");
-        }
+//        int i = studentsService.commitPersonDetailInformation(students);
+//        if (i == 0) {
+//            result.setFailure("提交失败");
+//        } else {
+//            result.setSuccess("提交成功");
+//        }
         return result;
     }
 
 
-    private boolean big2M(MultipartFile file) {
-        return file.getSize() >= 2 * 1024 * 1024;
-    }
-    private boolean big10M(MultipartFile file) {
-        return file.getSize() >= 10 * 1024 * 1024;
-    }
+
 
 
     private boolean writeFile2Location(MultipartFile file, String name, String mobile, Students students, ResponseMessage<String> result,String type){

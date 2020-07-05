@@ -2,6 +2,8 @@ package com.cec.tv.service;
 
 import com.cec.tv.model.Manage;
 
+import java.util.List;
+
 public interface ManagerService {
 
 
@@ -19,4 +21,6 @@ public interface ManagerService {
     Manage queryByName(String name);
 
     Manage queryByToken(String token);
+
+    List<Manage> queryAllOrganList();
 }

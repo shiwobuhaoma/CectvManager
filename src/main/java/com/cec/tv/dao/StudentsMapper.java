@@ -10,7 +10,6 @@ import java.util.Map;
 public interface StudentsMapper {
     int deleteByPrimaryKey(String id);
 
-    int insert(Students record);
 
     int insertSelective(Students record);
 
@@ -20,11 +19,15 @@ public interface StudentsMapper {
 
     int updateByPrimaryKey(Students record);
 
-    List<Students> selectByOrganId(String managerId);
+    List<Students> selectByOrganId( Map<String,Object> map);
 
     List<Students> queryStudentsOrderByEndTime(Map<String,Object> map);
 
     List<Students> queryStudentsOrderByStartTime(Map<String,Object> map);
 
     List<Students> queryStudentsOrderByStartAndEndTime(Map<String,Object> map);
+
+    int queryTotalCountByOrganId(String id);
+
+    List<Students> queryAllByStartAndEndTime(Map<String, Object> map);
 }

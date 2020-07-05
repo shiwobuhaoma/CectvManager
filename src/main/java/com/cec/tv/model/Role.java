@@ -6,17 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
 @ApiModel("角色实体")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("userole")
 public class Role {
     @TableId(value = "id",type = IdType.AUTO)//指定自增策略
@@ -50,4 +44,69 @@ public class Role {
     @ApiModelProperty(value="角色对应的权限",hidden=true)
     @TableField(exist=false)
     private List<Permission> permissions;//角色权限关系  多对多  一个角色对应多个权限
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Boolean getCanmodify() {
+        return canmodify;
+    }
+
+    public void setCanmodify(Boolean canmodify) {
+        this.canmodify = canmodify;
+    }
+
+    public Date getCreatedate() {
+        return createdate;
+    }
+
+    public void setCreatedate(Date createdate) {
+        this.createdate = createdate;
+    }
+
+    public Boolean getIsdel() {
+        return isdel;
+    }
+
+    public void setIsdel(Boolean isdel) {
+        this.isdel = isdel;
+    }
+
+    public String getrName() {
+        return rName;
+    }
+
+    public void setrName(String rName) {
+        this.rName = rName;
+    }
+
+    public String getRole_name() {
+        return role_name;
+    }
+
+    public void setRole_name(String role_name) {
+        this.role_name = role_name;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 }

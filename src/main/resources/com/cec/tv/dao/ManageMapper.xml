@@ -25,17 +25,13 @@
   <select id="queryByToken" resultType="com.cec.tv.model.Manage"  parameterType="java.lang.String">
     select * from air_manage where token = #{token,jdbcType=VARCHAR}
   </select>
-
+<select id="queryAllOrganList" resultType="com.cec.tv.model.Manage">
+   select * from air_manage
+</select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from air_manage
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.cec.tv.model.Manage" >
-    insert into air_manage (name, password,
-    roleId)
-    values (#{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
-     #{roleid,jdbcType=VARCHAR})
-  </insert>
   <insert id="insertSelective" parameterType="com.cec.tv.model.Manage" >
     insert into air_manage
     <trim prefix="(" suffix=")" suffixOverrides="," >
